@@ -14,8 +14,7 @@ python-dotenv
 requests
 
 #message broker
-pika
+kombu
 
 #events
 eventlet
-kombu

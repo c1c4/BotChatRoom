@@ -1,16 +1,20 @@
-import eventlet
+import threading
 
 from server import init_api
-
-eventlet.monkey_patch()
 
 app, socketio = init_api()
 
 
+def test(msg):
+    print(msg)
+    socketio.emit('botResponse', msg)
+
+
 def main():
-    from server.message_broker.receive import start_consuming
-    start_consuming()
-    socketio.run(app, debug=True)
+    from server.message_broker.consumer import run
+    consumer_message = threading.Thread(target=run, name='Consumer message')
+    consumer_message.start()
+    socketio.run(app, debug=True, host='localhost', port=5000)
 
 
 if __name__ == '__main__':
