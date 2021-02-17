@@ -1,6 +1,5 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_socketio import SocketIO
 from flask_sqlalchemy import SQLAlchemy
 
 from server.configuration import config
@@ -9,7 +8,6 @@ from server.configuration.exceptions import NotFound, generic_render, DataFail, 
     error_notification_render
 
 db = SQLAlchemy()
-socketio = SocketIO()
 
 
 def init_api():
@@ -23,6 +21,4 @@ def init_api():
     db.init_app(app)
     CORS(app)
 
-    socketio.init_app(app, cors_allowed_origins="*", async_mode="threading")
-
-    return app, socketio
+    return app

@@ -1,20 +1,12 @@
-import threading
-
 from server import init_api
-
-app, socketio = init_api()
-
-
-def test(msg):
-    print(msg)
-    socketio.emit('botResponse', msg)
+from server.configuration import config
+from server.controllers.stock_controller import stock_blueprint
 
 
 def main():
-    from server.message_broker.consumer import run
-    consumer_message = threading.Thread(target=run, name='Consumer message')
-    consumer_message.start()
-    socketio.run(app, debug=True, host='localhost', port=5000)
+    app = init_api()
+    app.register_blueprint(stock_blueprint)
+    app.run(debug=True, host=config.HOST, port=config.PORT)
 
 
 if __name__ == '__main__':

@@ -2,14 +2,14 @@ from datetime import datetime
 
 from flask import jsonify
 
-from server.__main__ import app
 from server.configuration import config
+from server.message_broker.send import send_stock_message
 from server.model.message import Message
 from server.repository import user_repository
 from server.request import stooq_requests
 
 
-def retrieve_stooq_data(stooq_code):
+def retrieve_stock_data(stooq_code):
     result = stooq_requests.get_to_stooq(stooq_code)
     msg = ''
     for record in result:
@@ -23,6 +23,4 @@ def retrieve_stooq_data(stooq_code):
     message.user = user
 
     message_dto = Message.convert_model_to_dto(message)
-    with app.app_context():
-        response = jsonify(message_dto)
-    return response.json
+    send_stock_message(message_dto)
